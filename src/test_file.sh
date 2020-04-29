@@ -32,7 +32,13 @@ ToHtml() {
 	IFS=$'\n'
 	for line in `echo -e "$VOICE_FILES"`; do
 		name="$(echo "$(basename "$line")" | sed 's/\.[^\.]*$//')"
-		tr="<tr><td>$name</td><td><audio controls><source src=\"https://raw.githubusercontent.com/ytyaru/Build.OpenJTalk.20200428110203/master/docs/flac/$name.flac\" type=\"audio/flac\"><source src=\"https://raw.githubusercontent.com/ytyaru/Build.OpenJTalk.20200428110203/master/docs/wav/$name.wav\" type=\"audio/wav\"></audio></td></tr>"
+#		urlA=https://raw.githubusercontent.com/ytyaru/Build.OpenJTalk.20200428110203/master/docs
+#		url_wav=$urlA/wav/$name.wav
+#		url_flac=$urlA/flac/$name.flac
+		urlB=https://github.com/ytyaru/Build.OpenJTalk.20200428110203/blob/master/docs
+		url_wav=$urlB/wav/$name.wav?raw=true
+		url_flac=$urlB/flac/$name.flac?raw=true
+		tr="<tr><td>$name</td><td><audio controls><source src=\"$url_flac\" type=\"audio/flac\"><source src=\"$url_wav\" type=\"audio/wav\"></audio></td></tr>"
 		table+="${tr}\n"
 	done
 	table+="</table>\n"
@@ -62,7 +68,10 @@ ToMarkdown() {
 	IFS=$'\n'
 	for line in `echo -e "$VOICE_FILES"`; do
 		local name="$(echo "$(basename "$line")" | sed 's/\.[^\.]*$//')"
-		local tr="$name|<audio controls><source src=\"https://raw.githubusercontent.com/ytyaru/Build.OpenJTalk.20200428110203/master/docs/flac/$name.flac\" type=\"audio/flac\"><source src=\"https://raw.githubusercontent.com/ytyaru/Build.OpenJTalk.20200428110203/master/docs/wav/$name.wav\" type=\"audio/wav\"></audio>"
+		urlB=https://github.com/ytyaru/Build.OpenJTalk.20200428110203/blob/master/docs
+		url_wav=$urlB/wav/$name.wav?raw=true
+		url_flac=$urlB/flac/$name.flac?raw=true
+		local tr="$name|<audio controls><source src=\"$url_flac\" type=\"audio/flac\"><source src=\"$url_wav\" type=\"audio/wav\"></audio>"
 		table+="${tr}\n"
 	done
 	table+="\n"
