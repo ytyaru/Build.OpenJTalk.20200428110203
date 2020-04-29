@@ -134,7 +134,85 @@ cp 京歌カオル_1.0 $HOME/root/sys/env/tool/openjtalk/voice/
 cp 想音いくと_1.0 $HOME/root/sys/env/tool/openjtalk/voice/
 cp 想音いくる_1.0 $HOME/root/sys/env/tool/openjtalk/voice/
 
+# tohoku-f01
+git clone https://github.com/icn-lab/htsvoice-tohoku-f01
+cp -r htsvoice-tohoku-f01 $HOME/root/sys/env/tool/openjtalk/voice/
+
+# cube370
+mkdir -p $HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com
+wget -O type-A.htsvoice https://github.com/anoyetta/ACT.Hojoring/blob/master/source/ACT.TTSYukkuri/ACT.TTSYukkuri.Core/OpenJTalk/voice/type-A.htsvoice?raw=true
+wget -O type-B.htsvoice  https://github.com/anoyetta/ACT.Hojoring/blob/master/source/ACT.TTSYukkuri/ACT.TTSYukkuri.Core/OpenJTalk/voice/type-B.htsvoice?raw=true
+wget -O type-G.htsvoice  https://github.com/anoyetta/ACT.Hojoring/blob/master/source/ACT.TTSYukkuri/ACT.TTSYukkuri.Core/OpenJTalk/voice/type-G.htsvoice?raw=true
+wget -O type-T.htsvoice  https://github.com/anoyetta/ACT.Hojoring/blob/master/source/ACT.TTSYukkuri/ACT.TTSYukkuri.Core/OpenJTalk/voice/type-T.htsvoice?raw=true
+wget -O type-alpha.htsvoice  https://github.com/anoyetta/ACT.Hojoring/blob/master/source/ACT.TTSYukkuri/ACT.TTSYukkuri.Core/OpenJTalk/voice/type-alpha.htsvoice?raw=true
+wget -O type-beta.htsvoice  https://github.com/anoyetta/ACT.Hojoring/blob/master/source/ACT.TTSYukkuri/ACT.TTSYukkuri.Core/OpenJTalk/voice/type-beta.htsvoice?raw=true
+cp type-A.htsvoice $HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com
+cp type-B.htsvoice $HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com
+cp type-G.htsvoice $HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com
+cp type-T.htsvoice $HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com
+cp type-alpha.htsvoice $HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com
+cp type-beta.htsvoice $HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com
+
+# http://cube370.wiki.fc2.com/wiki/%E8%87%AA%E4%BD%9C%E9%9F%B3%E9%9F%BF%E3%83%A2%E3%83%87%E3%83%AB
+#wget https://box-bucket007.east.edge.storage-yahoobox.jp/7c6f5602-328c-4ef3-85a7-b7ed32d407da?response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27Voice%2520TYPE-%25CE%25B1.zip&response-content-type=application%2Fx-zip-compressed&AWSAccessKeyId=AKIMYIO3UN0W0AJP2HG&Expires=1588114106&Signature=saUmBOOlKOZngjqIDXlA6m9zbTQ%3D
+#wget https://box-bucket007.east.edge.storage-yahoobox.jp/bce89f6a-1d51-4b57-ac6c-a7a9b5f6f5da?response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27Voice%2520TYPE-%25CE%25B2.zip&response-content-type=application%2Fx-zip-compressed&AWSAccessKeyId=AKIMYIO3UN0W0AJP2HG&Expires=1588114104&Signature=mdf6lj1DpO8t6mjLN7UMQK5fpcM%3D
+#wget https://box-bucket007.east.edge.storage-yahoobox.jp/692101ad-34bd-404d-8e75-7752b2e13fc1?response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27ver1.zip&response-content-type=application%2Fx-zip-compressed&AWSAccessKeyId=AKIMYIO3UN0W0AJP2HG&Expires=1588114103&Signature=JJi6GLFHIAzVwp5vLY8E3YrbMQI%3D
+#wget https://box-bucket007.east.edge.storage-yahoobox.jp/75a72995-8f1e-4e38-a508-f9c9caf794e7?response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27Voice%2520TYPE-%25CE%25B4%2520ver1.zip&response-content-type=application%2Fx-zip-compressed&AWSAccessKeyId=AKIMYIO3UN0W0AJP2HG&Expires=1588114101&Signature=%2BV0JN2o%2FUQXhgdrzqTvtMTtyeH0%3D
+#unar "Voice TYPE-α.zip"
+#unar "Voice TYPE-β.zip"
+#unar "ver1.zip"
+#unar "Voice TYPE-δ ver1.zip"
+#mkdir -p "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "Voice TYPE-α" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "Voice TYPE-β" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "ver1" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "Voice TYPE-δ ver1" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "Voice TYPE-ƒÀ" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "Voice TYPE-ƒ¿" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "ver1" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+#cp -r "Voice TYPE-ƒÂ ver1" "$HOME/root/sys/env/tool/openjtalk/voice/cube370.wiki.fc2.com"
+
+# https://ragolun.exblog.jp/
+wget https://ucd7000c47d3857fa1d7cd96d1c8.dl.dropboxusercontent.com/cd/0/get/A2sS4NdNNo5vLYT0sq7f1h5-88v8VBiLaZrcsByr_NQA6lLT_EAwUPHTn4aZOtt7o5TOPu2tFJ67PW0pe7cZwRHqQIBd2UPqxL1fNno3YBrlWA/file?_download_id=3410527103088319710015116337900931438871611135285688317362924928&_notify_domain=www.dropbox.com&dl=1
+wget https://ucedfc8977c056a87ace48ab95b2.dl.dropboxusercontent.com/cd/0/get/A2voWgw1ONhGVmO3BWMW0DdT4l8hK81-hbvYL0YW2RnVMOeFzF8XE2EMmVFLnK8BTQEwD_CXfP5R9cZqVL3ZbCJH8h8XNV3pMfvKZry6MINAPg/file?_download_id=05131657441344473806040899488788764487557412455665181338712181744&_notify_domain=www.dropbox.com&dl=1
+wget https://uc79ba190a525edd72abe49856ac.dl.dropboxusercontent.com/cd/0/get/A2vIE0akIuEYub5ds-KvlaaJy8H_0ffoOnOdcypJemA9dCSJCy9hnJwwDcgFEhevw_WKKcl2LwjZXTP-4MCRGj7OuhCHMrLSNWfzU4mtjbcBjw/file?_download_id=03870614259431160865582171696519558933896251059717663473211456457&_notify_domain=www.dropbox.com&dl=1
+wget https://uc75cd6068bd18b4d4dafcaae24a.dl.dropboxusercontent.com/cd/0/get/A2tfdNKUlUHFgeWC2LfQlniqtOYhi_IQ1cyoAoEnal8Ifzw8GGOVPKkDXTalBWT7ippzFQm_OK9p0omlAk4cMySRxMNqaNIxE__CiHhCb3xlqg/file?_download_id=56571496591244167589468114893205491846345105682266761199323038847&_notify_domain=www.dropbox.com&dl=1
+wget https://uc35133cae739fae5a600e07539d.dl.dropboxusercontent.com/cd/0/get/A2s4NawA3_J_aWkvomyuekgwvlpnM3R8g6xLpPoiXLPNCdqwaFCNoNP6QGF3iT-ECeZR8B9rUjgspvSs4b1iXqaV-CeZhH8B6wKlDGa2mP7N7w/file?_download_id=28610037926230472375026846208954997599070229142737243830725204&_notify_domain=www.dropbox.com&dl=1
+wget https://ucb7f850a7691f7859373687ae3e.dl.dropboxusercontent.com/cd/0/get/A2vlJdfCPWZjQScESYSND3ZZCFOhNL6i48blbhkx0vx6CQjkZ1nPXcZ1NiGqn-iiodowEAvAnzTa_RphDllNUOQLj9A07x_RYpg618rlDi6w5g/file?_download_id=03889425044652528770800818827164287960042690033068561800715119889&_notify_domain=www.dropbox.com&dl=1
+wget https://ucccff8b053a8814a51153a8a96e.dl.dropboxusercontent.com/cd/0/get/A2uRaM0bCJcNzd1QMGSpLvsyq57ljBTEnZqYdBLsM-JOEaLzxIS_vEpN1KzFQap4_-AFtEOZgcJsh1LZzutd6lhPm_QFZCZsCzpI9qO6q18w9Q/file?_download_id=567051691634231983403125989053993156330680433852615713965528657&_notify_domain=www.dropbox.com&dl=1
+wget https://uc44f46cc80e6b5c8796ec18f216.dl.dropboxusercontent.com/cd/0/get/A2sZA2UxZN25pXCr4Xs8S-OA7gkh4QYoGJP21Jm92QnUsDpi6YAl3L9RTZLnu091EAuu0PxLKw_z5qR4pf1W3A_7q7RuWuLM1mHypHyN17pZ7g/file?_download_id=6009787151016297709266907366839089919721485975279344826030530864&_notify_domain=www.dropbox.com&dl=1
+wget https://uccd282f1671c6f585493e97388f.dl.dropboxusercontent.com/cd/0/get/A2sKjNDVhchAuqrpiiu8qLtozVB1YmW7sBgkQOpeY39XCPpb4Ae08t-jITanHB7YiXWFUT4YveKLqKw8PSqMpS2MzyYHet1IRKMSirS0tBlcyw/file?_download_id=03410818572220076939119380585380160441486650212727872428462583547&_notify_domain=www.dropbox.com&dl=1
+wget https://uc9d92a0b36894c0c18ca96b5b4e.dl.dropboxusercontent.com/cd/0/get/A2uNQoRwMXWrEb2Mg2zJzmKskbfCoqm3GNugbovSN-RW0dYtHLeRB_PXoEozBxkWq6ll5yQccfV2LhF5hYvlDc5dHNxlQj0lKDerdWgfsjwTYQ/file?_download_id=291719150213061604642654973160964562406061522557658028369367348309&_notify_domain=www.dropbox.com&dl=1
+wget https://ucd872e497bd99efd91896811e20.dl.dropboxusercontent.com/cd/0/get/A2u15VymkI0gx-G6-RC4dJiIFY8Q20cd_MDKQFisbdxD_HLqwmvCweLsmyIfQHWBJdSzP9oFtre_EsSjMenTTojExDxq11L6g8dbeNt1D1YH_w/file?_download_id=489376607961263148341933427766111184105936400994266763785293068814&_notify_domain=www.dropbox.com&dl=1
+wget https://ucf36e3a3d185ff8696d6d81c417.dl.dropboxusercontent.com/cd/0/get/A2ur9U0id4kf-oJBvABsAPXK-4NMwGsooWz2Z7pcLA0LtPYl2V1Kmgw3zIFiR091rR5sEwfR7N7p5cY0uOjFAA8UfWCG82CAWf1_D8NNAMu-AA/file?_download_id=32148443956563409440245959527105383952278724968737832767604352171&_notify_domain=www.dropbox.com&dl=1
+wget https://ucaef86c7ed18eb4dffe5169f9fe.dl.dropboxusercontent.com/cd/0/get/A2tuLY63mxv53in4PqsyNMez6d9qhesZ7Z6DiT4deS_q14jCFWecy8_D3IDPd8O2ds7lKoqlxYjzJEoFaQSriJmlkDRdlbP61tx2DV6minj_pw/file?_download_id=8282169088738636036553044907608845188649694901779864894778001014&_notify_domain=www.dropbox.com&dl=1
+wget https://uc84e202204c7af61f524ea7c73b.dl.dropboxusercontent.com/cd/0/get/A2vUY3Qz_GGjOa97HOSGbZp023ib0luIKX1qC-ftbEQGuyfGi1y6YvksjcoTpMUQEaiwWIQECyrfJYGOIRIoLlDOVxHXGZXjPapzQIPZius8gg/file?_download_id=694974570880211371465188717720384480962109170869641430219183317685&_notify_domain=www.dropbox.com&dl=1
+wget https://uc97ddd948bc170e1bee4da8c062.dl.dropboxusercontent.com/cd/0/get/A2vy6XOc4eZObZdeC8ZdLLYckzwfe37v54BDi5RKmZLYvO-ZM8kmuFABi5y6-YPwzRJFZ-sLsLHdo2vVD-9TRoU0nw6T3mmAV2LIJ4xoE2V6gA/file?_download_id=300679820665335835802294979466571292838999316948235548047202052344&_notify_domain=www.dropbox.com&dl=1
+wget https://uc133b0c5b0afa3a7dc751a35ad5.dl.dropboxusercontent.com/cd/0/get/A2tDj7Uo8QfsNVo-uNW4BWlQcu4S7RiViz6hiIjscCuoznS_AICGrGdWnWRqTyy4y3nG0gw1hYb64HH5MdUzjSIrw3wfW8_uGZEX4sY8M7CXMg/file?_download_id=78136780814183163794923656964863735291730774278873032957220015982225&_notify_domain=www.dropbox.com&dl=1
+wget https://uc51e46a56cf29189bcec4fa0798.dl.dropboxusercontent.com/cd/0/get/A2sEE-aDMlwWUF0F7mMMNim0_Dv146JBsdZqQIjc4P2I4VR0154VNCqOCgQZiAliZL-DfHz-IM2LovSOBNQOzPnPDmZvFMEsBreOXA4vzPRatQ/file?_download_id=4859786877567968762861532159180841667114450392679422426756618491095&_notify_domain=www.dropbox.com&dl=1
+wget https://ucc2bff5b84e44e5a93cb627a792.dl.dropboxusercontent.com/cd/0/get/A2sPovHXgPSasqClFgcjE7z5RAEvt44d86Q7kIo1USe84iITy5XBuSUdQnWuuiLWJSAN8PVkcLyhRp1IwkSgsMzlP0zWVuZtNOJk1atYBK7w_w/file?_download_id=3147300832519897424269870604793657311852961935429455078896856377&_notify_domain=www.dropbox.com&dl=1
+mkdir -p "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "ぴよちゃんぼいす（.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "雪音ルウ２.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "雪音ルウ.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "L.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "風音桜凪.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "M.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "R.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "j2.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "J.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "ひめる３.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "ひめる.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "H-09.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "H-08.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "H-02.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "H-01.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "海賊まさver2.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "海賊まさver5.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+cp "海賊まさver4.htsvoice" "$HOME/root/sys/env/tool/openjtalk/voice/ragolun.exblog.jp"
+
 find $HOME/root/sys/env/tool/openjtalk/voice/ -name *.htsvoice
+find $HOME/root/sys/env/tool/openjtalk/voice/ -name *.htsvoice | wc -l 
 
 # 再生
 echo 'こんにちは' | open_jtalk \

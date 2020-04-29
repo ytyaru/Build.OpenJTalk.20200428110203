@@ -1,5 +1,7 @@
 #!/bin/bash
-find $HOME/root/sys/env/tool/openjtalk/voice/ -name *.htsvoice
+FILES="$(find $HOME/root/sys/env/tool/openjtalk/voice/ -name *.htsvoice | uniq)"
+echo "$FILES"
+echo "$FILES" | wc -l
 
 # 再生
 echo 'こんにちは' | open_jtalk \
