@@ -1,63 +1,80 @@
 #!/bin/bash
 OPENJTALK_VOICE_DIR="${OPENJTALK_VOICE_DIR:-$HOME/root/sys/env/tool/openjtalk/voice/}"
-OPENJTALK_VOICE_PATHS=""
-GetVoices() { # $1...: PATH_DIR(option)
-	[ -n "$OPENJTALK_VOICE_PATHS" ] && { echo -e "$OPENJTALK_VOICE_PATHS"; return; }
-	local paths=()
-	for arg in "$@"; do { paths+=("$arg"); } done
-	paths+=("$OPENJTALK_VOICE_DIR")
-	paths+=("/usr/share/hts-voice/")
-	for path in "${paths[@]}"; do
-		[ ! -d "$path" ] && continue
-		local file_path="$(find "$(cd "${path}"; pwd)" -name *.htsvoice)"
-		OPENJTALK_VOICE_PATHS+="${file_path}\n"
-	done
-	echo -e "$OPENJTALK_VOICE_PATHS" | sed  '/^$/d'
-}
-GetDefaultVoice() { # $1: PATH_DIR(option)
-	local names=(
-		"mei_normal"	# ---------1
-		"tohoku-f01-neutral"
-		"takumi_normal"
-		"type-beta"
-		"蒼歌ネロ"
-		"ワタシ"
-		"緋惺"
-		"天月りよん"
-		"nitech_jp_atr503_m001"
-		"白狐舞"		# ---------2
-		"なないろニジ"
-		"空唄カナタ"
-		"薪宮風季" 
-		"遊音一莉"		# ---------3
-		"唱地ヨエ"
-		"句音コノ。"	# ---------4
-		"月音ラミ_1.0"
-	)
-	for name in "${names[@]}"; do
-		path="$(echo "$(GetVoices "$@")" | grep -m1 "${name}.htsvoice")"
-		[ -f "${path}" ] && { echo "${path}"; return; }
-	done
-}
-SearchVoice() {
-	echo "$(GetVoices "$@")" | grep -m1 "$1.htsvoice"
-}
-GetRandomVoice() { # $1: PATH_DIR(option)
-	local PATHS="$(GetVoices "$@")"
-	local COUNT=$(echo "${PATHS}" | wc -l)
-	local SELECTED=$(($RANDOM % $COUNT))
-	echo -e "$PATHS" | head -n ${SELECTED} | tail -n 1
-}
-GetDefaultDic() {
-	local paths=(
-		"/var/lib/mecab/dic/open-jtalk/naist-jdic"
-	)
-	for path in "${paths[@]}"; do
-		[ -d "${path}" ] && { echo "${path}"; return; }
-	done
-	echo '/usr/local/dic'
-}
+#OPENJTALK_VOICE_PATHS=""
 Run() { # jtalk
+	GetVoices() { # $1...: PATH_DIR(option)
+		[ -n "$OPENJTALK_VOICE_PATHS" ] && { echo -e "$OPENJTALK_VOICE_PATHS"; return; }
+		local paths=()
+		for arg in "$@"; do { paths+=("$arg"); } done
+		paths+=("$OPENJTALK_VOICE_DIR")
+		paths+=("/usr/share/hts-voice/")
+		for path in "${paths[@]}"; do
+			[ ! -d "$path" ] && continue
+			local file_path="$(find "$(cd "${path}"; pwd)" -name *.htsvoice)"
+			OPENJTALK_VOICE_PATHS+="${file_path}\n"
+		done
+		echo -e "$OPENJTALK_VOICE_PATHS" | sed  '/^$/d'
+	}
+	GetDefaultVoice() { # $1: PATH_DIR(option)
+		local names=(
+			"mei_normal"	# ---------1
+			"tohoku-f01-neutral"
+			"takumi_normal"
+			"type-beta"
+			"蒼歌ネロ"
+			"ワタシ"
+			"緋惺"
+			"天月りよん"
+			"nitech_jp_atr503_m001"
+			"白狐舞"		# ---------2
+			"なないろニジ"
+			"空唄カナタ"
+			"薪宮風季" 
+			"遊音一莉"		# ---------3
+			"唱地ヨエ"
+			"句音コノ。"	# ---------4
+			"月音ラミ_1.0"
+		)
+		for name in "${names[@]}"; do
+			path="$(echo "$(GetVoices "$@")" | grep -m1 "${name}.htsvoice")"
+			[ -f "${path}" ] && { echo "${path}"; return; }
+		done
+	}
+	GetBlacklistVoice() { # Error: Dictionary or HTS voice cannot be loaded.
+		cat <<-EOS
+			cmu_us_arctic_slt
+			H-09
+			海賊まさver5
+			雪音ルウ２
+		EOS
+	}
+	GetVoicesWithoutBlacklist() {
+		local PATHS="$(GetVoices "$@")"
+		local blacks=($(IFS=$'\n'; echo -e "$(GetBlacklistVoice)"))
+		local result="$PATHS"
+		for black in "${blacks[@]}"; do
+			result="$(echo -e "$result" | sed -r "/${black}.htsvoice$/d")"
+		done
+		echo -e "$result"
+	}
+	SearchVoice() {
+		echo "$(GetVoices "$@")" | grep -m1 "$1.htsvoice"
+	}
+	GetRandomVoice() { # $1: PATH_DIR(option)
+		local PATHS="$(GetVoices "$@")"
+		local COUNT=$(echo "${PATHS}" | wc -l)
+		local SELECTED=$(($RANDOM % $COUNT))
+		echo -e "$PATHS" | head -n ${SELECTED} | tail -n 1
+	}
+	GetDefaultDic() {
+		local paths=(
+			"/var/lib/mecab/dic/open-jtalk/naist-jdic"
+		)
+		for path in "${paths[@]}"; do
+			[ -d "${path}" ] && { echo "${path}"; return; }
+		done
+		echo '/usr/local/dic'
+	}
 	Help() {
 		local this_path="$(realpath "${BASH_SOURCE:-0}")"
 		local this="$(basename "$this_path")"
@@ -75,7 +92,8 @@ Run() { # jtalk
 			Env:
 			  OPENJTALK_VOICE_DIR  .htsvoiceがあるルートディレクトリパスをセットすること
 			    "${OPENJTALK_VOICE_DIR}"
-			Voices: $(echo "$(GetVoices)" | wc -l)
+			Voices: $(echo "$(GetVoices)" | wc -l) $(echo "$(GetVoicesWithoutBlacklist)" | wc- l)
+				$(GetVoicesWithoutBlacklist)
 			  $(echo "$(GetVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
 			This:
 			  "$this_path"
