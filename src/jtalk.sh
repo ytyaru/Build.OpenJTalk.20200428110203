@@ -87,19 +87,14 @@ Run() { # jtalk
 		OPENJTALK_VALID_VOICE_PATHS="$(echo -e "$result" | sed  '/^$/d')"
 		echo -e "$OPENJTALK_VALID_VOICE_PATHS"
 	}
+	GetVoicesNormal() {
+		[ -n "$OPENJTALK_NORMAL_VOICE_PATHS" ] && { echo -e "$OPENJTALK_NORMAL_VOICE_PATHS"; return; }
+		OPENJTALK_NORMAL_VOICE_PATHS="$(sort <(GetVoicesWithoutBlacklist) <(GetGreenlistVoices) | uniq -u)"
+		echo -e "$OPENJTALK_NORMAL_VOICE_PATHS"
+	}
 	SearchVoice() {
 		echo "$(GetVoicesWithoutBlacklist "$@")" | grep -m1 "$1.htsvoice"
 	}
-
-
-#		GetGreenlistVoices
-#		GetVoicesWithoutBlacklist 
-#	GetRandomVoice() { # $1: PATH_DIR(option)
-#		local PATHS="$(GetVoicesWithoutBlacklist "$@")"
-#		local COUNT=$(echo "${PATHS}" | wc -l)
-#		local SELECTED=$(($RANDOM % $COUNT))
-#		echo -e "$PATHS" | head -n ${SELECTED} | tail -n 1
-#	}
 	GetRandomVoice() {
 		local PATHS="$(cat -)"
 		local COUNT=$(echo -e "${PATHS}" | wc -l)
@@ -136,8 +131,8 @@ Run() { # jtalk
 			Voices: $(echo -e "$(GetVoicesWithoutBlacklist)" | wc -l)
 			  Green: $(echo -e "$(GetGreenlistVoices)" | wc -l)
 			    $(echo "$(GetGreenlistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
-			  Normal: $(echo -e "$(GetVoicesWithoutBlacklist)" | wc -l)
-			    $(echo "$(GetVoicesWithoutBlacklist)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+			  Normal: $(echo -e "$(GetVoicesNormal)" | wc -l)
+			    $(echo "$(GetVoicesNormal)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
 			  Black: $(echo -e "$(GetBlacklistVoices)" | wc -l)  Error: Dictionary or HTS voice cannot be loaded.
 			    $(echo "$(GetBlacklistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
 			This:
