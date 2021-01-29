@@ -78,15 +78,17 @@ Run() { # jtalk
 			Parameters:
 			  MESSAGE  発話させたいテキスト
 			  VOICE    発話させたい.htsvoiceファイルパス
-			env:
+			Env:
 			  OPENJTALK_VOICE_DIR  .htsvoiceがあるルートディレクトリ
 			    "${OPENJTALK_VOICE_DIR}"
-			examples:
+			Examples:
 			  jtalk これを読み上げます
 			  jtalk -r 声をランダムにします
 			  jtalk -v type-beta 初音ミクです
 			  jtalk -o /tmp/work/a.wav 音声ファイルに録音します
-			this: "$(realpath "${BASH_SOURCE:-0}")"
+			This: "$(realpath "${BASH_SOURCE:-0}")"
+			Voices:
+			  $(echo "$(GetVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
 		EOS
 		)"
 		echo "$text"
@@ -104,8 +106,8 @@ Run() { # jtalk
 		d) OPT_SELECTED_DIC_PATH="$OPTARG" ;;
 		o) OPT_OUTPUT_FILE_PATH="$OPTARG" ;;
 		h) Help; return;;
-		:) echo  "[ERROR] Option argument is undefined.";;   # 
-		\?) echo "[ERROR] Undefined options.";;
+		:) echo  "[ERROR] 値が必要なオプションに値が指定されていません。"; Help;;   # 
+		\?) echo "[ERROR] 未定義のオプションです。"; Help;;
 		esac
 	done
 	shift $(($OPTIND - 1))
@@ -121,12 +123,9 @@ Run() { # jtalk
 		echo "open_jtalk -x \"$DIC\" -m \"$VOICE\" -ow \"$OUTPUT\" -r $OPT_SPEED -g $OPT_VOLUME "
 	}
 	AplayCmd() {
-		[ "$OUTPUT" = '/dev/stdout' ] && { echo ' | aplay'; return; }
 		local OUTPUT="$OPT_OUTPUT_FILE_PATH"
-		local cmd_aplay_file=""
-		[ "$OUTPUT" != '/dev/stdout' ] && cmd_aplay_file="\"${OUTPUT}\""
-		local cmd_aplay=" ; aplay ${cmd_aplay_file}; "
-		echo "$cmd_aplay"
+		[ "$OUTPUT" = '/dev/stdout' ] && { echo ' | aplay'; return; }
+		echo " ; aplay \"${OUTPUT}\"; "
 	}
 	local cmd="echo \"$MESSAGE\" | $(OpenJTalkCmd) $(AplayCmd)"
 	echo "${cmd}"
