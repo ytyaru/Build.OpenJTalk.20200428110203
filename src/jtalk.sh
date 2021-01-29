@@ -1,16 +1,6 @@
 #!/bin/bash
 OPENJTALK_VOICE_DIR="${OPENJTALK_VOICE_DIR:-$HOME/root/sys/env/tool/openjtalk/voice/}"
 OPENJTALK_VOICE_PATHS=""
-#GetVoices() { # $1...: PATH_DIR(option)
-#	local paths=()
-#	for arg in "$@"; do { paths+=("$arg"); } done
-#	paths+=("$OPENJTALK_VOICE_DIR")
-#	paths+=("/usr/share/hts-voice/")
-#	OPENJTALK_VOICE_PATHS=""
-#	for path in "${paths[@]}"; do
-#		[ -d "$path" ] && echo "$(find "$(cd "${path}"; pwd)" -name *.htsvoice)"
-#	done
-#}
 GetVoices() { # $1...: PATH_DIR(option)
 	[ -n "$OPENJTALK_VOICE_PATHS" ] && { echo -e "$OPENJTALK_VOICE_PATHS"; return; }
 	local paths=()
@@ -24,47 +14,36 @@ GetVoices() { # $1...: PATH_DIR(option)
 	done
 	echo -e "$OPENJTALK_VOICE_PATHS" | sed  '/^$/d'
 }
-
 GetDefaultVoice() { # $1: PATH_DIR(option)
-	local PATH_DEFAULT="${1:-$OPENJTALK_VOICE_DIR}"
 	local names=(
-		"mei_normal.htsvoice"	# ---------1
-		"tohoku-f01-neutral.htsvoice"
-		"takumi_normal.htsvoice"
-		"type-beta.htsvoice"
-		"蒼歌ネロ.htsvoice"
-		"ワタシ.htsvoice"
-		"緋惺.htsvoice"
-		"天月りよん.htsvoice"
-		"nitech_jp_atr503_m001.htsvoice"
-		"白狐舞.htsvoice"		# ---------2
-		"なないろニジ.htsvoice"
-		"空唄カナタ.htsvoice"
-		"薪宮風季.htsvoice" 
-		"遊音一莉.htsvoice"		# ---------3
-		"唱地ヨエ.htsvoice"
-		"句音コノ。.htsvoice"	# ---------4
-		"月音ラミ_1.0.htsvoice"
+		"mei_normal"	# ---------1
+		"tohoku-f01-neutral"
+		"takumi_normal"
+		"type-beta"
+		"蒼歌ネロ"
+		"ワタシ"
+		"緋惺"
+		"天月りよん"
+		"nitech_jp_atr503_m001"
+		"白狐舞"		# ---------2
+		"なないろニジ"
+		"空唄カナタ"
+		"薪宮風季" 
+		"遊音一莉"		# ---------3
+		"唱地ヨエ"
+		"句音コノ。"	# ---------4
+		"月音ラミ_1.0"
 	)
 	for name in "${names[@]}"; do
-		path="$(find "$(cd "${PATH_DEFAULT}"; pwd)" -name "${name}")"
+		path="$(echo "$(GetVoices "$@")" | grep -m1 "${name}.htsvoice")"
 		[ -f "${path}" ] && { echo "${path}"; return; }
 	done
 }
-#SearchVoice() {
-#	[ -f "$1" ] && { echo "$1"; return; }
-#	local paths=()
-#	paths+=("$OPENJTALK_VOICE_DIR")
-#	paths+=("/usr/share/hts-voice/")
-#	for path in "${paths[@]}"; do
-#		[ -d "$path" ] && echo "$(find "$(cd "${path}"; pwd)" -name "$1.htsvoice")"
-#	done
-#}
 SearchVoice() {
-	echo "$(GetVoices)" | grep -m1 "$1.htsvoice"
+	echo "$(GetVoices "$@")" | grep -m1 "$1.htsvoice"
 }
 GetRandomVoice() { # $1: PATH_DIR(option)
-	local PATHS="$(GetVoices "$1")"
+	local PATHS="$(GetVoices "$@")"
 	local COUNT=$(echo "${PATHS}" | wc -l)
 	local SELECTED=$(($RANDOM % $COUNT))
 	echo -e "$PATHS" | head -n ${SELECTED} | tail -n 1
