@@ -1,14 +1,30 @@
 #!/bin/bash
 OPENJTALK_VOICE_DIR="${OPENJTALK_VOICE_DIR:-$HOME/root/sys/env/tool/openjtalk/voice/}"
+OPENJTALK_VOICE_PATHS=""
+#GetVoices() { # $1...: PATH_DIR(option)
+#	local paths=()
+#	for arg in "$@"; do { paths+=("$arg"); } done
+#	paths+=("$OPENJTALK_VOICE_DIR")
+#	paths+=("/usr/share/hts-voice/")
+#	OPENJTALK_VOICE_PATHS=""
+#	for path in "${paths[@]}"; do
+#		[ -d "$path" ] && echo "$(find "$(cd "${path}"; pwd)" -name *.htsvoice)"
+#	done
+#}
 GetVoices() { # $1...: PATH_DIR(option)
+	[ -n "$OPENJTALK_VOICE_PATHS" ] && { echo -e "$OPENJTALK_VOICE_PATHS"; return; }
 	local paths=()
 	for arg in "$@"; do { paths+=("$arg"); } done
 	paths+=("$OPENJTALK_VOICE_DIR")
 	paths+=("/usr/share/hts-voice/")
 	for path in "${paths[@]}"; do
-		[ -d "$path" ] && echo "$(find "$(cd "${path}"; pwd)" -name *.htsvoice)"
+		[ ! -d "$path" ] && continue
+		local file_path="$(find "$(cd "${path}"; pwd)" -name *.htsvoice)"
+		OPENJTALK_VOICE_PATHS+="${file_path}\n"
 	done
+	echo -e "$OPENJTALK_VOICE_PATHS" | sed  '/^$/d'
 }
+
 GetDefaultVoice() { # $1: PATH_DIR(option)
 	local PATH_DEFAULT="${1:-$OPENJTALK_VOICE_DIR}"
 	local names=(
@@ -35,15 +51,17 @@ GetDefaultVoice() { # $1: PATH_DIR(option)
 		[ -f "${path}" ] && { echo "${path}"; return; }
 	done
 }
+#SearchVoice() {
+#	[ -f "$1" ] && { echo "$1"; return; }
+#	local paths=()
+#	paths+=("$OPENJTALK_VOICE_DIR")
+#	paths+=("/usr/share/hts-voice/")
+#	for path in "${paths[@]}"; do
+#		[ -d "$path" ] && echo "$(find "$(cd "${path}"; pwd)" -name "$1.htsvoice")"
+#	done
+#}
 SearchVoice() {
-	[ -f "$1" ] && { echo "$1"; return; }
-	local paths=()
-#	for arg in "$@"; do { paths+=("$arg"); } done
-	paths+=("$OPENJTALK_VOICE_DIR")
-	paths+=("/usr/share/hts-voice/")
-	for path in "${paths[@]}"; do
-		[ -d "$path" ] && echo "$(find "$(cd "${path}"; pwd)" -name "$1.htsvoice")"
-	done
+	echo "$(GetVoices)" | grep -m1 "$1.htsvoice"
 }
 GetRandomVoice() { # $1: PATH_DIR(option)
 	local PATHS="$(GetVoices "$1")"
