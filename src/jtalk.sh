@@ -40,7 +40,7 @@ Run() { # jtalk
 			[ -f "${path}" ] && { echo "${path}"; return; }
 		done
 	}
-	GetBlacklistVoice() { # Error: Dictionary or HTS voice cannot be loaded.
+	GetBlacklistVoices() { # Error: Dictionary or HTS voice cannot be loaded.
 		cat <<-EOS
 			cmu_us_arctic_slt
 			H-09
@@ -49,19 +49,21 @@ Run() { # jtalk
 		EOS
 	}
 	GetVoicesWithoutBlacklist() {
+		[ -n "$OPENJTALK_VALID_VOICE_PATHS" ] && { echo -e "$OPENJTALK_VALID_VOICE_PATHS"; return; }
 		local PATHS="$(GetVoices "$@")"
-		local blacks=($(IFS=$'\n'; echo -e "$(GetBlacklistVoice)"))
+		local blacks=($(IFS=$'\n'; echo -e "$(GetBlacklistVoices)"))
 		local result="$PATHS"
 		for black in "${blacks[@]}"; do
 			result="$(echo -e "$result" | sed -r "/${black}.htsvoice$/d")"
 		done
-		echo -e "$result"
+		OPENJTALK_VALID_VOICE_PATHS="$(echo -e "$result" | sed  '/^$/d')"
+		echo -e "$OPENJTALK_VALID_VOICE_PATHS"
 	}
 	SearchVoice() {
-		echo "$(GetVoices "$@")" | grep -m1 "$1.htsvoice"
+		echo "$(GetVoicesWithoutBlacklist "$@")" | grep -m1 "$1.htsvoice"
 	}
 	GetRandomVoice() { # $1: PATH_DIR(option)
-		local PATHS="$(GetVoices "$@")"
+		local PATHS="$(GetVoicesWithoutBlacklist "$@")"
 		local COUNT=$(echo "${PATHS}" | wc -l)
 		local SELECTED=$(($RANDOM % $COUNT))
 		echo -e "$PATHS" | head -n ${SELECTED} | tail -n 1
@@ -78,7 +80,7 @@ Run() { # jtalk
 	Help() {
 		local this_path="$(realpath "${BASH_SOURCE:-0}")"
 		local this="$(basename "$this_path")"
-		local text="$(cat <<-EOS
+		cat <<-EOS
 			音声合成する。日本語。OpenJTalkを使う。	v0.0.1
 			Usage: $this [options] MESSAGE
 			Options:
@@ -92,9 +94,10 @@ Run() { # jtalk
 			Env:
 			  OPENJTALK_VOICE_DIR  .htsvoiceがあるルートディレクトリパスをセットすること
 			    "${OPENJTALK_VOICE_DIR}"
-			Voices: $(echo "$(GetVoices)" | wc -l) $(echo "$(GetVoicesWithoutBlacklist)" | wc- l)
-				$(GetVoicesWithoutBlacklist)
-			  $(echo "$(GetVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+			Voices: $(echo -e "$(GetVoicesWithoutBlacklist)" | wc -l)
+			  $(echo "$(GetVoicesWithoutBlacklist)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+			Voice-Blacklist: $(echo -e "$(GetBlacklistVoices)" | wc -l)  Error: Dictionary or HTS voice cannot be loaded.
+			  $(echo "$(GetBlacklistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
 			This:
 			  "$this_path"
 			Examples:
@@ -103,8 +106,6 @@ Run() { # jtalk
 			  $this -v type-beta 初音ミクです
 			  $this -o /tmp/work/a.wav 音声ファイルに録音します
 		EOS
-		)"
-		echo "$text"
 	}
 	local OPT_IS_RANDOM_VOICE=0
 	local OPT_SELECTED_VOICE="$(GetDefaultVoice)"
