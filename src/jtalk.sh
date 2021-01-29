@@ -87,7 +87,7 @@ Run() { # jtalk
 		OPENJTALK_VALID_VOICE_PATHS="$(echo -e "$result" | sed  '/^$/d')"
 		echo -e "$OPENJTALK_VALID_VOICE_PATHS"
 	}
-	GetVoicesNormal() {
+	GetNormallistVoice() {
 		[ -n "$OPENJTALK_NORMAL_VOICE_PATHS" ] && { echo -e "$OPENJTALK_NORMAL_VOICE_PATHS"; return; }
 		OPENJTALK_NORMAL_VOICE_PATHS="$(sort <(GetVoicesWithoutBlacklist) <(GetGreenlistVoices) | uniq -u)"
 		echo -e "$OPENJTALK_NORMAL_VOICE_PATHS"
@@ -125,16 +125,28 @@ Run() { # jtalk
 			  -o PATH  出力先パスを指定する（test.wav）
 			  -d PATH  辞書のパスを指定する
 			  -S       再生しない。（-oを指定したときのみ）
+		EOS
+		cat <<-EOS
 			Env:
 			  OPENJTALK_VOICE_DIR  .htsvoiceがあるルートディレクトリパスをセットすること
 			    "${OPENJTALK_VOICE_DIR}"
+		EOS
+		cat <<-EOS
 			Voices: $(echo -e "$(GetVoicesWithoutBlacklist)" | wc -l)
+		EOS
+		cat <<-EOS
 			  Green: $(echo -e "$(GetGreenlistVoices)" | wc -l)
 			    $(echo "$(GetGreenlistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
-			  Normal: $(echo -e "$(GetVoicesNormal)" | wc -l)
-			    $(echo "$(GetVoicesNormal)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+		EOS
+		cat <<-EOS
+			  Normal: $(echo -e "$(GetNormallistVoice)" | wc -l)
+			    $(echo "$(GetNormallistVoice)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+		EOS
+		cat <<-EOS
 			  Black: $(echo -e "$(GetBlacklistVoices)" | wc -l)  Error: Dictionary or HTS voice cannot be loaded.
 			    $(echo "$(GetBlacklistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+		EOS
+		cat <<-EOS
 			This:
 			  "$this_path"
 			Examples:
