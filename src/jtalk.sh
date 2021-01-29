@@ -190,11 +190,11 @@ Run() { # jtalk
 		local VOICE="$OPT_SELECTED_VOICE"
 		local DIC="$OPT_SELECTED_DIC_PATH"
 		local OUTPUT="$OPT_OUTPUT_FILE_PATH"
-		echo "open_jtalk -x \"$DIC\" -m \"$VOICE\" -ow \"$OUTPUT\" -r $OPT_SPEED -g $OPT_VOLUME "
+		echo "open_jtalk -x \"$DIC\" -m \"$VOICE\" -ow \"$OUTPUT\" -r $OPT_SPEED -g $OPT_VOLUME"
 	}
 	AplayCmd() {
 		local OUTPUT="$OPT_OUTPUT_FILE_PATH"
-		[ "$OUTPUT" = '/dev/stdout' ] && { echo ' | aplay'; return; }
+		[ "$OUTPUT" = '/dev/stdout' ] && { echo ' | aplay -q'; return; }
 		[ 1 -eq $OPT_IS_SILENT ] && return;
 		echo " ; aplay \"${OUTPUT}\"; "
 	}
