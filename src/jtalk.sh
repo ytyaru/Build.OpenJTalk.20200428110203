@@ -40,6 +40,34 @@ Run() { # jtalk
 			[ -f "${path}" ] && { echo "${path}"; return; }
 		done
 	}
+	GetGreenlistVoices() { # 高品質（非black）
+		[ -n "$OPENJTALK_GREEN_VOICE_PATHS" ] && { echo -e "$OPENJTALK_GREEN_VOICE_PATHS"; return; }
+		local names=(
+			"mei_normal"	# ---------1
+			"tohoku-f01-neutral"
+			"takumi_normal"
+			"type-beta"
+			"蒼歌ネロ"
+			"ワタシ"
+			"緋惺"
+			"天月りよん"
+			"nitech_jp_atr503_m001"
+			"白狐舞"		# ---------2
+			"なないろニジ"
+			"空唄カナタ"
+			"薪宮風季" 
+			"遊音一莉"		# ---------3
+			"唱地ヨエ"
+			"句音コノ。"	# ---------4
+			"月音ラミ_1.0"
+		)
+		for name in "${names[@]}"; do
+			path="$(echo "$(GetVoicesWithoutBlacklist "$@")" | grep -m1 "${name}.htsvoice")"
+			[ -f "${path}" ] && { OPENJTALK_GREEN_VOICE_PATHS+="${path}\n"; }
+		done
+		OPENJTALK_GREEN_VOICE_PATHS="$(echo -e "$OPENJTALK_GREEN_VOICE_PATHS" | sed  '/^$/d')"
+		echo -e "$OPENJTALK_GREEN_VOICE_PATHS"
+	}
 	GetBlacklistVoices() { # Error: Dictionary or HTS voice cannot be loaded.
 		cat <<-EOS
 			cmu_us_arctic_slt
@@ -62,9 +90,19 @@ Run() { # jtalk
 	SearchVoice() {
 		echo "$(GetVoicesWithoutBlacklist "$@")" | grep -m1 "$1.htsvoice"
 	}
-	GetRandomVoice() { # $1: PATH_DIR(option)
-		local PATHS="$(GetVoicesWithoutBlacklist "$@")"
-		local COUNT=$(echo "${PATHS}" | wc -l)
+
+
+#		GetGreenlistVoices
+#		GetVoicesWithoutBlacklist 
+#	GetRandomVoice() { # $1: PATH_DIR(option)
+#		local PATHS="$(GetVoicesWithoutBlacklist "$@")"
+#		local COUNT=$(echo "${PATHS}" | wc -l)
+#		local SELECTED=$(($RANDOM % $COUNT))
+#		echo -e "$PATHS" | head -n ${SELECTED} | tail -n 1
+#	}
+	GetRandomVoice() {
+		local PATHS="$(cat -)"
+		local COUNT=$(echo -e "${PATHS}" | wc -l)
 		local SELECTED=$(($RANDOM % $COUNT))
 		echo -e "$PATHS" | head -n ${SELECTED} | tail -n 1
 	}
@@ -84,7 +122,8 @@ Run() { # jtalk
 			音声合成する。日本語。OpenJTalkを使う。	v0.0.1
 			Usage: $this [options] MESSAGE
 			Options:
-			  -r       声をランダムにする
+			  -r       声をランダムにする（ブラックリスト除外）
+			  -R       声をランダムにする（グリーンリストのみ）
 			  -v ID    指定した声にする（IDは後述のVoices参照）
 			  -s 1.0   スピードを指定する（0.5, 2, ...）
 			  -V 0.0   ボリュームを指定する（-10, 10, ...）
@@ -95,9 +134,12 @@ Run() { # jtalk
 			  OPENJTALK_VOICE_DIR  .htsvoiceがあるルートディレクトリパスをセットすること
 			    "${OPENJTALK_VOICE_DIR}"
 			Voices: $(echo -e "$(GetVoicesWithoutBlacklist)" | wc -l)
-			  $(echo "$(GetVoicesWithoutBlacklist)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
-			Voice-Blacklist: $(echo -e "$(GetBlacklistVoices)" | wc -l)  Error: Dictionary or HTS voice cannot be loaded.
-			  $(echo "$(GetBlacklistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+			  Green: $(echo -e "$(GetGreenlistVoices)" | wc -l)
+			    $(echo "$(GetGreenlistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+			  Normal: $(echo -e "$(GetVoicesWithoutBlacklist)" | wc -l)
+			    $(echo "$(GetVoicesWithoutBlacklist)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+			  Black: $(echo -e "$(GetBlacklistVoices)" | wc -l)  Error: Dictionary or HTS voice cannot be loaded.
+			    $(echo "$(GetBlacklistVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
 			This:
 			  "$this_path"
 			Examples:
@@ -114,9 +156,11 @@ Run() { # jtalk
 	local OPT_SPEED="1.0" # -r 1.0
 	local OPT_VOLUME="0.0" # -g 0.0
 	local OPT_IS_SILENT=0
-	while getopts ':rv:o:d:s:V:Sh' OPT; do
+	while getopts ':rRv:o:d:s:V:Sh' OPT; do
 		case $OPT in
-		r) OPT_SELECTED_VOICE="$(GetRandomVoice)" ;;
+#		r) OPT_SELECTED_VOICE="$(GetRandomVoice)" ;;
+		r) OPT_SELECTED_VOICE="$(echo -e "$(GetVoicesWithoutBlacklist)" | GetRandomVoice)" ;;
+		R) OPT_SELECTED_VOICE="$(echo -e "$(GetGreenlistVoices)" | GetRandomVoice)" ;;
 		v) OPT_SELECTED_VOICE="$(SearchVoice "$OPTARG")" ;;
 		d) OPT_SELECTED_DIC_PATH="$OPTARG" ;;
 		o) OPT_OUTPUT_FILE_PATH="$OPTARG" ;;
