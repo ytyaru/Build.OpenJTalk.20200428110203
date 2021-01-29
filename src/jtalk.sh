@@ -57,38 +57,33 @@ GetDefaultDic() {
 	done
 	echo '/usr/local/dic'
 }
-OpenJTalk() { # $1: message(option), $2: voice(option), $3: output:(option:/dev/stdout)
-	local MESSAGE="${1:-こんにちは。これはテスト用メッセージです。}"
-	local VOICE="${2:-$(GetRandomVoice)}"
-	local OUTPUT="${3:-/dev/stdout}"
-	local DIC="$(GetDefaultDic)"
-	local cmd_aplay_file=""
-	[ "$OUTPUT" != '/dev/stdout' ] && cmd_aplay_file="\"${OUTPUT}\""
-	local cmd_aplay=" | aplay ${cmd_aplay_file}"
-	local cmd="echo \"$MESSAGE\" | open_jtalk -x \"$DIC\" -m \"$VOICE\" -ow \"$OUTPUT\" $cmd_aplay"
-	eval "${cmd}"
-	error=$?; [ $error -ne 0 ] && { echo "ERROR: OpenJTalk $MESSAGE\n$VOICE\n$OUTPUT"; }
-}
 Run() { # jtalk
 	Help() {
+		local this_path="$(realpath "${BASH_SOURCE:-0}")"
+		local this="$(basename "$this_path")"
 		local text="$(cat <<-EOS
-			音声合成する。日本語。OpenJTalkを使う。
-			Usage:
-			  jtalk MESSAGE [VOICE]
-			Parameters:
-			  MESSAGE  発話させたいテキスト
-			  VOICE    発話させたい.htsvoiceファイルパス
+			音声合成する。日本語。OpenJTalkを使う。	v0.0.1
+			Usage: $this [options] MESSAGE
+			Options:
+			  -r       声をランダムにする
+			  -v ID    指定した声にする（IDは後述のVoices参照）
+			  -s 1.0   スピードを指定する（0.5, 2, ...）
+			  -V 0.0   ボリュームを指定する（-10, 10, ...）
+			  -o PATH  出力先パスを指定する（test.wav）
+			  -d PATH  辞書のパスを指定する
+			  -S       再生しない。（-oを指定したときのみ）
 			Env:
-			  OPENJTALK_VOICE_DIR  .htsvoiceがあるルートディレクトリ
+			  OPENJTALK_VOICE_DIR  .htsvoiceがあるルートディレクトリパスをセットすること
 			    "${OPENJTALK_VOICE_DIR}"
-			Examples:
-			  jtalk これを読み上げます
-			  jtalk -r 声をランダムにします
-			  jtalk -v type-beta 初音ミクです
-			  jtalk -o /tmp/work/a.wav 音声ファイルに録音します
-			This: "$(realpath "${BASH_SOURCE:-0}")"
-			Voices:
+			Voices: $(echo "$(GetVoices)" | wc -l)
 			  $(echo "$(GetVoices)" | sed -r 's/(.+)\/(.+)\.htsvoice/\2/g' | uniq | sort | tr '\n' ' ')
+			This:
+			  "$this_path"
+			Examples:
+			  $this これを読み上げます
+			  $this -r 声をランダムにします
+			  $this -v type-beta 初音ミクです
+			  $this -o /tmp/work/a.wav 音声ファイルに録音します
 		EOS
 		)"
 		echo "$text"
@@ -99,15 +94,19 @@ Run() { # jtalk
 	local OPT_OUTPUT_FILE_PATH="/dev/stdout"
 	local OPT_SPEED="1.0" # -r 1.0
 	local OPT_VOLUME="0.0" # -g 0.0
-	while getopts ':rv:o:d:h' OPT; do
+	local OPT_IS_SILENT=0
+	while getopts ':rv:o:d:s:V:Sh' OPT; do
 		case $OPT in
 		r) OPT_SELECTED_VOICE="$(GetRandomVoice)" ;;
 		v) OPT_SELECTED_VOICE="$(SearchVoice "$OPTARG")" ;;
 		d) OPT_SELECTED_DIC_PATH="$OPTARG" ;;
 		o) OPT_OUTPUT_FILE_PATH="$OPTARG" ;;
+		s) OPT_SPEED="$OPTARG" ;;
+		V) OPT_VOLUME="$OPTARG" ;;
+		S) OPT_IS_SILENT=1 ;;
 		h) Help; return;;
-		:) echo  "[ERROR] 値が必要なオプションに値が指定されていません。"; Help;;   # 
-		\?) echo "[ERROR] 未定義のオプションです。"; Help;;
+		:) echo  "[ERROR] 値が必要なオプションに値が指定されていません。"; Help; return;;   # 
+		\?) echo "[ERROR] 未定義のオプションです。"; Help; return;;
 		esac
 	done
 	shift $(($OPTIND - 1))
@@ -125,6 +124,7 @@ Run() { # jtalk
 	AplayCmd() {
 		local OUTPUT="$OPT_OUTPUT_FILE_PATH"
 		[ "$OUTPUT" = '/dev/stdout' ] && { echo ' | aplay'; return; }
+		[ 1 -eq $OPT_IS_SILENT ] && return;
 		echo " ; aplay \"${OUTPUT}\"; "
 	}
 	local cmd="echo \"$MESSAGE\" | $(OpenJTalkCmd) $(AplayCmd)"
