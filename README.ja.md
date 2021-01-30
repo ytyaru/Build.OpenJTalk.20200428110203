@@ -4,6 +4,11 @@
 
 　OpenJTalkをビルドする。
 
+　以下はこれを使いやすくする。
+
+* [Shell.OpenJTalk.Command.20210130092059](https://github.com/ytyaru/Shell.OpenJTalk.Command.20210130092059)
+* [Shell.OpenJTalk.Daihon.20210130092306](https://github.com/ytyaru/Shell.OpenJTalk.Daihon.20210130092306)
+
 # デモ
 
 * https://ytyaru.github.io/Build.OpenJTalk.20200428110203/
